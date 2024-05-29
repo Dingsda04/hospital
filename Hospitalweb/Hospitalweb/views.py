@@ -58,12 +58,23 @@ count_department = 0
 
 # Hilfsfunktionen
 
+def create_error(id = None, name = None, street = None, n = None, state = None, zipcode = None, city = None, url = None):
+    Error.objects.create(
+        hospital_id=id,
+        name=name,
+        street=street,
+        number=n,
+        state=state,
+        zipcode=zipcode,
+        city=city,
+        url=url
+    )
+
 def remove_brackets(text):
     pattern = re.compile(r'\([^()]*\)')
     return pattern.sub('', text).strip()
 
 def get_links(driver, soup):
-    ## Get Links
     hospital_links = [a.get('href') for a in soup.select('a') if a.get('href') and a.get('href').startswith('/app/portrait/')]
 
     iteration = 0
@@ -138,6 +149,7 @@ def extract_mail(div_text):
 
     return mail
 
+
 # main
 
 def start_extraction():
@@ -146,7 +158,7 @@ def start_extraction():
 
     chrome_options = Options()
     chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--log-level=3")  # Setzen Sie den Log-Level auf 3, um Warnungen zu unterdrücken
+    chrome_options.add_argument("--log-level=3")
     chrome_options.add_argument("--filter-logs=.*TOOLTIP: Option \"content\" provided type \"null\".*")
     chrome_options.add_argument("--filter-logs=.*Google Maps JavaScript API has been loaded directly without loading=async. This can result in suboptimal performance. For best-practice loading patterns please see https://goo.gle/js-api-loading.*") 
     chrome_options.add_argument("--filter-logs=.*For best-practice loading patterns please see https://goo.gle/js-api-loading.*")
@@ -189,9 +201,7 @@ def start_extraction():
             hausnummer = match.group(2)
             plz, ort = extract_plz_ort(address)
         else:
-            # Store Errors
-            print('Error in Line 191')
-            continue
+            plz, ort, hausnummer, strasse = None, None, None, None
 
         nomi = pgeocode.Nominatim('de')
         result = nomi.query_postal_code(plz)
@@ -207,18 +217,9 @@ def start_extraction():
                 city=ort,
                 url=hospital_url
             )
-        except Exception as e:
-                print('Create Error...')
-                hospital = Error.objects.create(
-                hospital_id=hospital_id_,
-                name=hospital_name,
-                street=strasse,
-                number=hausnummer,
-                state=result['state_name'],
-                zipcode=plz,
-                city=ort,
-                url=hospital_url
-            )
+        except Exception:
+            print('Create Error...')
+            create_error(id = hospital_id_, name = hospital_name, street = strasse, number = hausnummer, state = result['state_name'], zipcode = plz, city = ort, url = hospital_url)
 
         try:
             time.sleep(2)
@@ -279,7 +280,6 @@ def start_extraction():
                         )
                         hospital.departments.add(department_obj)
                         Hospital.save(hospital)
-                        #Error: each hospital got all departments
 
 def get_results(method, page=1, per_page=100):
     global unwanted_hospital_names, searched_departments, state
@@ -367,7 +367,8 @@ def sort_hospitals(hospitals_with_matching_departments, matching_departments):
                     'id': dept.id,
                     'name': dept.name,
                     'tel_number': dept.tel_number,
-                    'mail': dept.mail
+                    'mail': dept.mail,
+                    'leitung': remove_brackets(dept.leitung)
                 }
                 for dept in hospital.departments.all() if dept in matching_departments
             ]
@@ -397,7 +398,8 @@ def export_to_excel(request):
                     'City': hospital['city'],
                     'Department Name': department['name'],
                     'Department Phone': department['tel_number'],
-                    'Department Email': department['mail']
+                    'Department Email': department['mail'],
+                    'Department Leitung': department['leitung']
                 })
 
         df = pd.DataFrame(hospital_data)

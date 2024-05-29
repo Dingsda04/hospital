@@ -36,7 +36,6 @@ class Error(models.Model):
     city = models.CharField(max_length=100, null=True)
     departments = models.ManyToManyField(Department, blank=True)
     url = models.URLField(null=True)
-    error = models.CharField(max_length=100, null=True)
 
     def __str__(self):
         return self.name 

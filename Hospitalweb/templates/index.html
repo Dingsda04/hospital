@@ -7,132 +7,10 @@
     <meta name="csrf-token" content="{{ csrf_token }}">
     <title>Extract</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            padding: 20px;
-            text-align: center;
-        }
-
-        #filter-container {
-            background-color: #fff;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: left;
-            margin: 0 auto;
-        }
-
-        label {
-            margin-bottom: 8px;
-            font-weight: bold;
-            display: inline-block; /* Jede Überschrift als Blockelement anzeigen */
-            padding-top: 1%;
-            padding-left: 2%;
-        }
-
-        select, button {
-            margin-top: 8px;
-            width: 45%; /* Anpassung der Breite für beide Select-Boxen */
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            display: inline-block;
-            vertical-align: top; /* Vertikale Ausrichtung der Select-Boxen oben */
-        }
-
-        button {
-            background-color: #4caf50;
-            color: white;
-            cursor: pointer;
-        }
-
-        /* Entfernen des Rahmens um die Box */
-        select{
-            border: none;
-            outline: none;
-            height: 150px;
-            overflow-y: auto;
-        }
-
-        select {
-            margin-top: 8px;
-            width: 15%; /* Anpassung der Breite, damit beide nebeneinander passen */
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            display: inline-block; /* Änderung auf inline-block */
-            margin-left: 10%;
-        }
-
-        #unwantedHospital{
-            position: absolute;
-            top: 12%;
-            right: 5.634%;
-            width: 25%;
-        }
-
-        b{
-            margin-left: 2%;
-        }
-
-        button{
-            position: relative;
-            left: 25%;
-            top: 10px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: auto;
-            padding: 20px;
-        }
-    
-        .hospital {
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-    
-        .hospital h2 {
-            margin-top: 0;
-            cursor: pointer;
-        }
-    
-        .departments {
-            margin-top: 10px;
-            padding-left: 20px;
-            display: none;
-        }
-    
-        .departments li {
-            list-style: none;
-        }
-    
-        .department-submenu {
-            margin-left: 20px;
-            display: none;
-        }
-    
-        .department-name {
-            cursor: pointer;
-        }
-
-        #excel{
-            width: 10%;
-            position: absolute;
-            top: 17vh;
-            left: 85vw;
-        }
+        body{font-family:Arial,sans-serif;background-color:#f5f5f5;padding:20px;text-align:center}#filter-container{background-color:#fff;padding:25px;border-radius:8px;box-shadow:0 0 10px rgb(0 0 0 / .1);text-align:left;margin:0 auto;padding-bottom: 3%;}label{margin-bottom:8px;font-weight:700;display:inline-block;padding-top:1%;padding-left:2%}select,button{width:45%;padding:8px;box-sizing:border-box;border:1px solid #ccc;border-radius:4px;}button{background-color:#4caf50;color:#fff;cursor:pointer}select{vertical-align: top;border:none;outline:none;height:150px;overflow-y:auto}select{margin-top:8px;width:15%;padding:8px;box-sizing:border-box;border:1px solid #ccc;border-radius:4px;display:inline-block;margin-left:10%}#unwantedHospital{position:absolute;top:12%;right:5.634%;width:25%}b{margin-left:2%}button{position:relative;left:25%;top:10px}.container{max-width:800px;margin:auto;padding:20px}.hospital{border:1px solid #ccc;border-radius:5px;margin-bottom:20px;padding:20px;background-color:#fff;box-shadow:0 0 10px rgb(0 0 0 / .1)}.hospital h2{margin-top:0;cursor:pointer}.departments{margin-top:10px;padding-left:20px;display:none}.departments li{list-style:none}.department-submenu{margin-left:20px;display:none}.department-name{cursor:pointer}#excel{width:10%;position:absolute;top:17vh;left:85vw}#loading{position:absolute;left:50%;transform:translateX(-50%);top:50%;font-weight: bold;font-size: larger;font-family:'Arial Black',Arial,sans-serif;display: none;}#extract{position:absolute;left:50%;transform:translateX(-50%);top: 24%;}
     </style>
 </head>
 <body>
-
     <div id="filter-container">
         <label for="department">Fachabteilung:</label>
         <select id="department" name="department" multiple>
@@ -175,7 +53,6 @@
             <option value="Zahn und Kieferheilkunde, Mund und Kieferchirurgie">Zahn und Kieferheilkunde, Mund und Kieferchirurgie</option>
             <option value="Intensivmedizin">Intensivmedizin</option>
         </select>
-
         <label for="state">Bundesland:</label>
         <select id="state" name="state" multiple>
             <option selected value="all">Alle</option>
@@ -196,167 +73,44 @@
             <option value="Schleswig-Holstein">Schleswig-Holstein</option>
             <option value="Thüringen">Thüringen</option>
         </select>
-        
         <b>Unerwünschte Krankenhausnamen:</b><br>
-
         <input type="text" id="unwantedHospital" name="unwantedHospital" placeholder="Komma-getrennte Namen">
         <button onclick="exportToExcel()" id="excel">Export to Excel</button>
-
-        <button onclick="submitFilter()">Extract</button>
+        <button id="extract" onclick="submitFilter()">Extract</button>
     </div>
-
-    
-    <div id="hospital-list" class="container">
-        <!-- Krankenhäuser werden hier angezeigt -->
-    </div>
-    
-
+    <div id="hospital-list" class="container"></div>
+    <div id="loading">Loading<span id="points"></span></div>
     <script>
-        let departmentSelect = document.getElementById('department');
-        let stateSelect = document.getElementById('state');
-    
-        departmentSelect.addEventListener('mousedown', (event) => handleMouseDown(event, 'department'));
-        stateSelect.addEventListener('mousedown', (event) => handleMouseDown(event, 'state'));
-    
-        function handleMouseDown(event, selectId) {
-            let options = document.querySelectorAll(`#${selectId}>option`);
-            if (event.target.tagName === 'OPTION' && !event.metaKey) {
-                event.preventDefault();
-                event.target.selected = !event.target.selected;
-                if (event.target.innerText === 'Alle') {
-                    options.forEach((option) => {
-                        if (option.innerText !== 'Alle') {
-                            option.selected = false;
-                        }
-                    });
-                } else {
-                    options.forEach((option) => {
-                        if (option.innerText === 'Alle') {
-                            option.selected = false;
-                        }
-                    });
-                }
-            }
-        }
-    
-        function submitFilter() {
-            let formData = new FormData();
-            const token = document.querySelector('[name=csrf-token]').content;
-            let stateValue = [];
-            let departmentValue = [];
-            document.querySelectorAll('#state>option:checked').forEach(option => {
-                stateValue.push(option.value);
-            })
-            document.querySelectorAll('#department>option:checked').forEach(option => {
-                departmentValue.push(option.value);
-            })
-            formData.append('csrfmiddlewaretoken', token);
-            formData.append('department', departmentValue);
-            formData.append('state', stateValue);
-            formData.append('unwanted', document.getElementById('unwantedHospital').value || '');
-            formData.append('extract', false);
-
-            fetch('/filter/', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': token
-                }
-            }).then(response => response.json())
-              .then(data => {
-                renderHospitals(data.hospitals);
-              });
-        }
-        function extract(){
-            let formData = new FormData();
-            const token = document.querySelector('[name=csrf-token]').content;
-            formData.append('csrfmiddlewaretoken', token);
-            formData.append('extract', true);
-
-            fetch('', {
-                    method: 'POST',
-                    body: formData
-                })
-        }
-        function renderHospitals(hospitals) {
-            const hospitalList = document.getElementById('hospital-list');
-            hospitalList.innerHTML = '';
-    
-            if (hospitals.length === 0) {
-                hospitalList.innerHTML = '<p>No hospitals found.</p>';
-                return;
-            }
-    
-            hospitals.forEach(hospital => {
-                const hospitalDiv = document.createElement('div');
-                hospitalDiv.className = 'hospital';
-                hospitalDiv.innerHTML = `
+        let departmentSelect=document.getElementById('department');let stateSelect=document.getElementById('state');departmentSelect.addEventListener('mousedown',(event)=>handleMouseDown(event,'department'));stateSelect.addEventListener('mousedown',(event)=>handleMouseDown(event,'state'));function handleMouseDown(event,selectId){let options=document.querySelectorAll(`#${selectId}>option`);if(event.target.tagName==='OPTION'&&!event.metaKey){event.preventDefault();event.target.selected=!event.target.selected;if(event.target.innerText==='Alle'){options.forEach((option)=>{if(option.innerText!=='Alle'){option.selected=!1}})}else{options.forEach((option)=>{if(option.innerText==='Alle'){option.selected=!1}})}}}
+        function submitFilter(){let hospitals = document.querySelectorAll('.hospital');if(hospitals[0]){if(hospitals[0].style.display != 'none'){hospitals.forEach(hospital => {hospital.style.display = 'none';})}
+        }document.getElementById('loading').style.display = 'block';let formData=new FormData();const token=document.querySelector('[name=csrf-token]').content;let stateValue=[];let departmentValue=[];document.querySelectorAll('#state>option:checked').forEach(option=>{stateValue.push(option.value)})
+        document.querySelectorAll('#department>option:checked').forEach(option=>{departmentValue.push(option.value)})
+        formData.append('csrfmiddlewaretoken',token);formData.append('department',departmentValue);formData.append('state',stateValue);formData.append('unwanted',document.getElementById('unwantedHospital').value||'');formData.append('extract',!1);fetch('/filter/',{method:'POST',body:formData,headers:{'X-CSRFToken':token}}).then(response=>response.json()).then(data=>{renderHospitals(data.hospitals)})}
+        function extract(){let formData=new FormData();const token=document.querySelector('[name=csrf-token]').content;formData.append('csrfmiddlewaretoken',token);formData.append('extract',!0);fetch('',{method:'POST',body:formData})}
+        function renderHospitals(hospitals){document.getElementById('loading').style.display = 'none';const hospitalList=document.getElementById('hospital-list');hospitalList.innerHTML='';if(hospitals.length===0){hospitalList.innerHTML='<p>No hospitals found.</p>';return}
+        hospitals.forEach(hospital=>{const hospitalDiv=document.createElement('div');hospitalDiv.className='hospital';hospitalDiv.innerHTML=`
                     <h2 onclick='toggleSubmenu(${hospital.id})'>${hospital.name}</h2>
                     <h5>${hospital.street} ${hospital.number}, ${hospital.zipcode} ${hospital.city}</h5>
                     <ul id="submenu-${hospital.id}" class="departments">
-                        ${hospital.departments.map(department => `
-                            <li>
-                                <h3 class="department-name" onclick="toggleDepartment('${department.id}')">${department.name}</h3>
-                                <ul id="department-${department.id}" class="department-submenu">
-                                    <li><strong>Tel:</strong> ${department.tel_number}</li>
-                                    <li><strong>Email:</strong> ${department.mail}</li>
-                                </ul>
-                            </li>
-                        `).join('')}
+                        ${hospital.departments.map(department => `<li><h3 class="department-name" onclick="toggleDepartment('${department.id}')">${department.name}</h3><ul id="department-${department.id}" class="department-submenu"><li><strong>Tel:</strong>${department.tel_number}</li><li><strong>Email:</strong>${department.mail}</li></ul></li>`).join('')}
                     </ul>
-                `;
-                hospitalList.appendChild(hospitalDiv);
-            });
-        }
-    
-        function toggleSubmenu(hospitalId) {
-            const submenu = document.getElementById('submenu-' + hospitalId);
-            submenu.style.display = (submenu.style.display === 'block') ? 'none' : 'block';
-        }
-    
-        function toggleDepartment(departmentId) {
-            const department = document.getElementById('department-' + departmentId);
-            department.style.display = (department.style.display === 'block') ? 'none' : 'block';
-        }
-
-        function exportToExcel() {
-            let formData = new FormData();
-            const token = document.querySelector('[name=csrf-token]').content;
-
-            let stateValue = [];
-            let departmentValue = [];
-            document.querySelectorAll('#state>option:checked').forEach(option => {
-                stateValue.push(option.value);
-            })
-            document.querySelectorAll('#department>option:checked').forEach(option => {
-                departmentValue.push(option.value);
-            })
-            
-            formData.append('csrfmiddlewaretoken', token);
-            formData.append('department', departmentValue);
-            formData.append('state', stateValue);
-            formData.append('unwanted', document.getElementById('unwantedHospital').value || '');
-
-            fetch('/export/', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': token
+                `;hospitalList.appendChild(hospitalDiv)})}
+        function toggleSubmenu(hospitalId){const submenu=document.getElementById('submenu-'+hospitalId);submenu.style.display=(submenu.style.display==='block')?'none':'block'}
+        function toggleDepartment(departmentId){const department=document.getElementById('department-'+departmentId);department.style.display=(department.style.display==='block')?'none':'block'}
+        function exportToExcel(){let formData=new FormData();const token=document.querySelector('[name=csrf-token]').content;let stateValue=[];let departmentValue=[];document.querySelectorAll('#state>option:checked').forEach(option=>{stateValue.push(option.value)})
+        document.querySelectorAll('#department>option:checked').forEach(option=>{departmentValue.push(option.value)})
+        formData.append('csrfmiddlewaretoken',token);formData.append('department',departmentValue);formData.append('state',stateValue);formData.append('unwanted',document.getElementById('unwantedHospital').value||'');fetch('/export/',{method:'POST',body:formData,headers:{'X-CSRFToken':token}}).then(response=>{return response.blob()}).then(blob=>{const url=window.URL.createObjectURL(blob);const a=document.createElement('a');a.style.display='none';a.href=url;a.download='hospitals.xlsx';document.body.appendChild(a);a.click();window.URL.revokeObjectURL(url)}).catch(error=>console.error('Error:',error))}
+        setInterval(()=>{
+            let loading = document.getElementById('loading');
+            if(loading.style.display == 'block'){
+                let points = document.getElementById('points');
+                if(points.textContent.length < 3){
+                    points.textContent = points.textContent + '.';
+                } else {
+                    points.textContent = '';
                 }
-            }).then(response => {
-                return response.blob();
-            }).then(blob => {
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = url;
-                a.download = 'hospitals.xlsx';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-            }).catch(error => console.error('Error:', error));
-        }
+            }
+        }, 500)
     </script>
-
 </body>
 </html>
